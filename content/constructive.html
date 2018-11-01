@@ -33,8 +33,9 @@
                   Extra<input type="text" name="extra" id="extra" value="1"><br><br>
                   
                   <b>Entity ID site and application</b><br>
-                  Site<input type="text" name="site" id="site" value="48"><br>
-                  Application<input type="text" name="application" id="application" value="23"><br>
+                  Site<input type="text" name="site" id="site" value="5"><br>
+                  Application<input type="text" name="application" id="application" value="5"><br>
+                  Entity<input type="text" name="entityID" id="entityID" value="1"><br>
                   <br>
                   <b>Location</b></br>
                   Latitude (Decimal degrees):<input type="text" name="latitude" id="latitude" value="36.595"><br>
@@ -43,7 +44,7 @@
                   
                   <br>
                   <b>Marking</b>
-                  Marking<input type="text" name="marking" id="marking" value="MyEntity"><br>
+                  Marking<input type="text" name="marking" id="marking" value="FuseEntity"><br>
                   <br>
                   
                   <br>
@@ -75,7 +76,7 @@
             var direction = 1;
             
             
-            espdu.entityID.entity = Math.round(Math.random() * 64000);
+            espdu.entityID.entity = parseInt(document.getElementById("entityID").value);
             
             /**
              * Called when the user clicks the "submit" button. Starts a task
@@ -98,6 +99,8 @@
                 }
                 
                 // Fill out entity type info
+                espdu.exerciseID = 7;
+                espdu.protocolVersion = 1;
                 espdu.entityType.entityKind = parseInt(document.getElementById("entitykind").value);
                 espdu.entityType.domain = parseInt(document.getElementById("domain").value);
                 espdu.entityType.country = parseInt(document.getElementById("country").value);
@@ -109,7 +112,7 @@
                 // Fill out entity ID 
                 espdu.entityID.site = parseInt(document.getElementById("site").value);
                 espdu.entityID.application = parseInt(document.getElementById("application").value);
-                espdu.entityID.entity = Math.round(Math.random() * 65000);
+                espdu.entityID.entity = parseInt(document.getElementById("entityID").value);
                 
                 // Marking
                 var convert =  new dis.StringConversion();
