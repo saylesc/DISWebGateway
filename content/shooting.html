@@ -78,6 +78,24 @@
        firePdu.targetEntityID.application = parseInt(document.getElementById("tApplicationID").value);
        firePdu.targetEntityID.entity = parseInt(document.getElementById("tEntityID").value);
        
+       // Position
+       var lat = parseFloat(document.getElementById("sLat").value);
+       var lon = parseFloat(document.getElementById("sLon").value);
+       var alt = parseFloat(document.getElementById("sAlt").value);
+                
+       // Convert lat/lon/alt to DIS coordinates
+       var conversion = new dis.CoordinateConversion();
+       latLonAlt = {};
+       latLonAlt.lat = lat;
+       latLonAlt.lon = lon;
+       latLonAlt.alt = alt;
+
+       var disCoordinates = conversion.getXYZfromLatLonAltDegrees(latLonAlt);
+       firePdu.locationInWorldCoordinates.x = disCoordinates.x;
+       firePdu.locationInWorldCoordinates.y = disCoordinates.y;
+       firePdu.locationInWorldCoordinates.z = disCoordinates.z;
+       console.log("Location:", disCoordinates);
+
        // Ammo type being shot
        var ammoSelect = document.getElementById("ammo");
        var ammo = ammoSelect.options[ammoSelect.selectedIndex].value;
@@ -101,6 +119,13 @@
        firePdu.eventID.eventNumber = eventIndex;
        
        // create and send fire PDU
+      var dataBuffer = new ArrayBuffer(1000); // typically 144 bytes, make it bigger for safety
+      var outputStream = new dis.OutputStream(dataBuffer);
+      firePdu.encodeToBinary(outputStream);
+      var trimmedData = outputStream.toByteArray();
+      websocket.send(trimmedData);
+      console.log("Sent pdu ", firePdu);
+ 
    }
    
    /**
@@ -111,17 +136,51 @@
    {
        var detonationPdu = new dis.DetonationPdu();
        console.log(detonationPdu);
+
+       detonationPdu.firingEntityID.site = parseInt(document.getElementById("dfSiteID").value);
+       detonationPdu.firingEntityID.application = parseInt(document.getElementById("dfApplicationID").value);
+       detonationPdu.firingEntityID.entity = parseInt(document.getElementById("dfEntityID").value);
        
-       var ammoSelect = document.getElementById("ammo");
-       var ammo = ammoSelect.options[ammoSelect.selectedIndex].value;
-       console.log("Ammo type: ", ammo);
+       detonationPdu.targetEntityID.site = parseInt(document.getElementById("dtSiteID").value);
+       detonationPdu.targetEntityID.application = parseInt(document.getElementById("dtApplicationID").value);
+       detonationPdu.targetEntityID.entity = parseInt(document.getElementById("dtEntityID").value);
+       
+       // Munition Type for AIM-9 Sidewinder
+       detonationPdu.burstDescriptor.munition.entityKind = 2;
+       detonationPdu.burstDescriptor.munition.domain = 1;
+       detonationPdu.burstDescriptor.munition.country = 225;
+       detonationPdu.burstDescriptor.munition.category = 1;
+       detonationPdu.burstDescriptor.munition.subcategory = 1;
+       detonationPdu.burstDescriptor.munition.spec = 0;
+       detonationPdu.burstDescriptor.munition.extra = 0;
+       detonationPdu.burstDescriptor.warhead = 0;
+       detonationPdu.burstDescriptor.fuse = 0;
+       detonationPdu.burstDescriptor.quantity = 1;
+       detonationPdu.burstDescriptor.rate = 0;
+
+       // Position
+       var lat = parseFloat(document.getElementById("dLat").value);
+       var lon = parseFloat(document.getElementById("dLon").value);
+       var alt = parseFloat(document.getElementById("dAlt").value);
+                
+       // Convert lat/lon/alt to DIS coordinates
+       var conversion = new dis.CoordinateConversion();
+       latLonAlt = {};
+       latLonAlt.lat = lat;
+       latLonAlt.lon = lon;
+       latLonAlt.alt = alt;
+
+       var disCoordinates = conversion.getXYZfromLatLonAltDegrees(latLonAlt);
+       detonationPdu.locationInWorldCoordinates.x = disCoordinates.x;
+       detonationPdu.locationInWorldCoordinates.y = disCoordinates.y;
+       detonationPdu.locationInWorldCoordinates.z = disCoordinates.z;
        
        var dataBuffer = new ArrayBuffer(1000); // typically 144 bytes, make it bigger for safety
        var outputStream = new dis.OutputStream(dataBuffer);
        detonationPdu.encodeToBinary(outputStream);
        var binaryData = outputStream.toByteArray();
        websocket.send(binaryData);
-       
+       console.log("Sent pdu ", detonationPdu);
       
    }
 
