@@ -45,6 +45,15 @@
                   <br>
                   <b>Marking</b>
                   Marking<input type="text" name="marking" id="marking" value="FuseEntity"><br>
+
+                  <br><br>
+                  <b>DeadReckoning</b>
+                  AngularVelocity: X<input type="text" name="dravx" id="drAvX" value="0.0"><br>
+                  AngularVelocity: Y<input type="text" name="dravy" id="drAvY" value="0.0"><br>
+                  AngularVelocity: Z<input type="text" name="dravz" id="drAvZ" value="0.0"><br>
+                  LinearAcceleration: Psi<input type="text" name="drlax" id="drLvX" value="0.0"><br>
+                  LinearAcceleration: Theta<input type="text" name="drlay" id="drLvY" value="0.0"><br>
+                  LinearAcceleration: Phi<input type="text" name="drlaz" id="drLvZ" value="0.0"><br>
                   <br>
                   
                   <br>
@@ -117,7 +126,6 @@
                 
                 // Marking
                 var convert =  new dis.StringConversion();
-                
                 espdu.marking.setMarking(document.getElementById("marking").value);
                 
                 // Position
@@ -138,7 +146,20 @@
                 espdu.entityLocation.y = disCoordinates.y;
                 espdu.entityLocation.z = disCoordinates.z;
                 console.log("Location:", disCoordinates);
-                
+
+                espdu.deadReckoningParameters.entityLinearAcceleration.x = 
+                    parseFloat(document.getElementById("drLvX").value);
+                espdu.deadReckoningParameters.entityLinearAcceleration.y = 
+                    parseFloat(document.getElementById("drLvY").value);
+                espdu.deadReckoningParameters.entityLinearAcceleration.z = 
+                    parseFloat(document.getElementById("drLvZ").value);
+                espdu.deadReckoningParameters.entityAngularVelocity.x =
+                    parseFloat(document.getElementById("drAvX").value);
+                espdu.deadReckoningParameters.entityAngularVelocity.y =
+                    parseFloat(document.getElementById("drAvY").value);
+                espdu.deadReckoningParameters.entityAngularVelocity.z =
+                    parseFloat(document.getElementById("drAvZ").value);
+
                 // How often to send
                 var frequency = parseInt(document.getElementById("sendfrequency").value);
                                           
